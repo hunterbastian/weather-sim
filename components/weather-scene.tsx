@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
 interface WeatherSceneProps {
   sun: number;
@@ -64,20 +64,37 @@ export default function WeatherScene({ sun, rain, storm }: WeatherSceneProps) {
   const frameRef = useRef(0);
   const lightningRef = useRef(0);
   const lightningTimerRef = useRef(0);
+  const weatherRef = useRef({ sun, rain, storm });
 
-  const draw = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  // Keep ref in sync with props
+  useEffect(() => {
+    weatherRef.current = { sun, rain, storm };
+  }, [sun, rain, storm]);
 
-    ctx.imageSmoothingEnabled = false;
-    frameRef.current++;
-    const frame = frameRef.current;
+  useEffect(() => {
+    let animId: number;
 
-    const stormT = Math.min(storm / 100, 1);
-    const rainT = Math.min(rain / 100, 1);
-    const sunT = Math.min(sun / 100, 1);
+    function draw() {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+
+      const { sun, rain, storm } = weatherRef.current;
+
+      ctx.imageSmoothingEnabled = false;
+      frameRef.current++;
+      const frame = frameRef.current;
+
+      const stormT = Math.min(storm / 100, 1);
+      const rainT = Math.min(rain / 100, 1);
+      const sunT = Math.min(sun / 100, 1);
 
     let skyR = 91, skyG = 140, skyB = 216;
     if (sunT > 0.5) {
@@ -250,13 +267,13 @@ export default function WeatherScene({ sun, rain, storm }: WeatherSceneProps) {
       ctx.fillRect(0, y, W, 1);
     }
 
-    requestAnimationFrame(draw);
-  }, [sun, rain, storm]);
+      animId = requestAnimationFrame(draw);
+    }
 
-  useEffect(() => {
-    const id = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(id);
-  }, [draw]);
+    animId = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(animId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
