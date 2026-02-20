@@ -2,59 +2,55 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme inline {
+  --font-sans: 'Silkscreen', monospace;
+  --color-retro-bg: #2a2a4a;
+  --color-retro-sky-blue: #5b8cd8;
+  --color-retro-sun: #f0c030;
+  --color-retro-green: #38a832;
+  --color-retro-dark-green: #1a6818;
+  --color-retro-cloud: #c0c0c0;
+  --color-retro-storm-cloud: #606878;
+  --color-retro-window-bg: #c0c0c0;
+  --color-retro-window-title: #000080;
+  --color-retro-window-text: #000000;
+  --color-retro-border-light: #ffffff;
+  --color-retro-border-dark: #808080;
+  --color-retro-border-darkest: #404040;
+  --color-retro-button-face: #c0c0c0;
+  --color-retro-highlight: #f0c030;
+}
+
 :root {
-  --background: #1a1a2e;
-  --foreground: #f0f0f5;
-  --card: rgba(255, 255, 255, 0.08);
-  --card-foreground: #f0f0f5;
-  --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: rgba(255, 255, 255, 0.55);
-  --accent: #4a90d9;
+  --background: #2a2a4a;
+  --foreground: #e0e0e0;
+  --card: #c0c0c0;
+  --card-foreground: #000000;
+  --muted: #a0a0a0;
+  --muted-foreground: #505050;
+  --accent: #000080;
   --accent-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.12);
-  --ring: #4a90d9;
-  --radius: 0.75rem;
-  --sun-color: #ffd700;
-  --rain-color: #4a90d9;
-  --storm-color: #8b5cf6;
+  --border: #808080;
+  --ring: #000080;
+  --radius: 0px;
 }
 
 * {
   border-color: var(--border);
+  image-rendering: pixelated;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Weather simulation keyframes */
-@keyframes pulse-sun {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 60px #ffd700, 0 0 100px #ffa500;
-  }
-  50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 80px #ffd700, 0 0 120px #ffa500;
-  }
+@keyframes pixel-fall {
+  0% { transform: translateY(-8px); }
+  100% { transform: translateY(320px); }
 }
 
-@keyframes fall {
-  0% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(320px);
-  }
-}
-
-@keyframes sway {
-  0%, 100% {
-    transform: rotate(-5deg);
-  }
-  50% {
-    transform: rotate(5deg);
-  }
+@keyframes pixel-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }

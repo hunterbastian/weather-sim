@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 interface WeatherSceneProps {
   sun: number;
@@ -8,340 +8,327 @@ interface WeatherSceneProps {
   storm: number;
 }
 
-function getSkyGradient(sun: number, rain: number, storm: number) {
-  if (storm > 50) {
-    return "linear-gradient(180deg, #2C3E50 0%, #4A5568 100%)";
-  }
-  if (rain > 50) {
-    return "linear-gradient(180deg, #5D6D7E 0%, #85929E 100%)";
-  }
-  if (sun > 70) {
-    return "linear-gradient(180deg, #4A90D9 0%, #87CEEB 100%)";
-  }
-  return "linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%)";
+interface Raindrop {
+  x: number;
+  y: number;
+  speed: number;
+  length: number;
 }
 
-function getCloudOpacity(rain: number, storm: number) {
-  if (rain > 0 || storm > 0) {
-    return Math.max(rain / 100, storm / 100) * 0.9;
+const W = 128;
+const H = 112;
+
+function lerpColor(
+  r1: number, g1: number, b1: number,
+  r2: number, g2: number, b2: number,
+  t: number
+): [number, number, number] {
+  return [
+    Math.round(r1 + (r2 - r1) * t),
+    Math.round(g1 + (g2 - g1) * t),
+    Math.round(b1 + (b2 - b1) * t),
+  ];
+}
+
+function drawPixelCloud(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  color: string
+) {
+  ctx.fillStyle = color;
+  for (let dx = 0; dx < 20; dx++) {
+    for (let dy = 0; dy < 6; dy++) {
+      ctx.fillRect(x + dx, y + dy + 4, 1, 1);
+    }
   }
-  return 0;
-}
-
-function getCloudColor(rain: number, storm: number) {
-  if (storm > 30) return "#5D6D7E";
-  if (rain > 50 || storm > 50) return "#8B8B8B";
-  return "#C0C0C0";
-}
-
-function Cloud({ className }: { className: string }) {
-  return <div className={className} />;
-}
-
-function GrassBlade({ height }: { height: number }) {
-  return (
-    <div
-      className="rounded-t-full"
-      style={{
-        width: 3,
-        height,
-        background: "#32CD32",
-        transformOrigin: "bottom center",
-      }}
-    />
-  );
+  for (let dx = 3; dx < 11; dx++) {
+    for (let dy = 0; dy < 5; dy++) {
+      if ((dx - 7) * (dx - 7) + (dy - 4) * (dy - 4) < 20) {
+        ctx.fillRect(x + dx, y + dy, 1, 1);
+      }
+    }
+  }
+  for (let dx = 9; dx < 18; dx++) {
+    for (let dy = 0; dy < 6; dy++) {
+      if ((dx - 13) * (dx - 13) + (dy - 5) * (dy - 5) < 22) {
+        ctx.fillRect(x + dx, y + dy + 1, 1, 1);
+      }
+    }
+  }
 }
 
 export default function WeatherScene({ sun, rain, storm }: WeatherSceneProps) {
-  const rainContainerRef = useRef<HTMLDivElement>(null);
-  const lightningRef = useRef<HTMLDivElement>(null);
-  const boltRef = useRef<HTMLDivElement>(null);
-  const stormIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const raindropsRef = useRef<HTMLDivElement[]>([]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const raindropsRef = useRef<Raindrop[]>([]);
+  const frameRef = useRef(0);
+  const lightningRef = useRef(0);
+  const lightningTimerRef = useRef(0);
 
-  const grassBlades = useMemo(
-    () =>
-      Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        height: 10 + Math.random() * 15,
-      })),
-    []
-  );
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const skyGradient = getSkyGradient(sun, rain, storm);
-  const cloudOpacity = getCloudOpacity(rain, storm);
-  const cloudColor = getCloudColor(rain, storm);
+    ctx.imageSmoothingEnabled = false;
+    frameRef.current++;
+    const frame = frameRef.current;
 
-  const triggerLightning = useCallback(() => {
-    const lightningEl = lightningRef.current;
-    const boltEl = boltRef.current;
-    if (!lightningEl || !boltEl) return;
+    const stormT = Math.min(storm / 100, 1);
+    const rainT = Math.min(rain / 100, 1);
+    const sunT = Math.min(sun / 100, 1);
 
-    lightningEl.style.background = "rgba(255, 255, 255, 0.9)";
-    boltEl.style.opacity = "1";
-    boltEl.style.left = `${20 + Math.random() * 60}%`;
-
-    setTimeout(() => {
-      lightningEl.style.background = "rgba(255, 255, 255, 0)";
-      boltEl.style.opacity = "0";
-    }, 100);
-
-    if (Math.random() > 0.5) {
-      setTimeout(() => {
-        lightningEl.style.background = "rgba(255, 255, 255, 0.9)";
-        boltEl.style.opacity = "1";
-        setTimeout(() => {
-          lightningEl.style.background = "rgba(255, 255, 255, 0)";
-          boltEl.style.opacity = "0";
-        }, 50);
-      }, 150);
+    let skyR = 91, skyG = 140, skyB = 216;
+    if (sunT > 0.5) {
+      const t = (sunT - 0.5) * 2;
+      [skyR, skyG, skyB] = lerpColor(skyR, skyG, skyB, 104, 176, 240, t);
     }
-  }, []);
-
-  // Manage raindrops
-  useEffect(() => {
-    const container = rainContainerRef.current;
-    if (!container) return;
-
-    const targetCount = Math.floor(Math.max(rain, storm * 0.5) * 1.5);
-    const drops = raindropsRef.current;
-
-    while (drops.length < targetCount) {
-      const drop = document.createElement("div");
-      drop.style.position = "absolute";
-      drop.style.width = "2px";
-      drop.style.height = "20px";
-      drop.style.background =
-        "linear-gradient(transparent, rgba(174, 194, 224, 0.8))";
-      drop.style.animation = `fall ${0.5 + Math.random() * 0.5}s linear infinite`;
-      drop.style.animationDelay = `${Math.random() * 0.5}s`;
-      drop.style.left = `${Math.random() * 100}%`;
-      container.appendChild(drop);
-      drops.push(drop);
+    if (rainT > 0.3) {
+      const t = (rainT - 0.3) / 0.7;
+      [skyR, skyG, skyB] = lerpColor(skyR, skyG, skyB, 112, 120, 136, t);
+    }
+    if (stormT > 0.2) {
+      const t = (stormT - 0.2) / 0.8;
+      [skyR, skyG, skyB] = lerpColor(skyR, skyG, skyB, 48, 48, 64, t);
     }
 
-    while (drops.length > targetCount) {
-      const drop = drops.pop();
-      drop?.remove();
+    // Sky
+    for (let y = 0; y < H - 24; y++) {
+      const grad = y / (H - 24);
+      const r = Math.round(skyR + (skyR * 0.3) * grad);
+      const g = Math.round(skyG + (skyG * 0.2) * grad);
+      const b = Math.round(skyB - (skyB * 0.1) * grad);
+      ctx.fillStyle = `rgb(${Math.min(r, 255)},${Math.min(g, 255)},${Math.max(b, 0)})`;
+      ctx.fillRect(0, y, W, 1);
     }
 
-    const opacity = Math.max(rain, storm * 0.5) / 100;
-    drops.forEach((drop) => {
-      drop.style.opacity = String(opacity);
-    });
-  }, [rain, storm]);
-
-  // Manage storm lightning
-  useEffect(() => {
-    if (stormIntervalRef.current) {
-      clearInterval(stormIntervalRef.current);
-      stormIntervalRef.current = null;
+    // Lightning flash
+    if (lightningRef.current > 0) {
+      ctx.fillStyle = `rgba(255,255,255,${lightningRef.current * 0.8})`;
+      ctx.fillRect(0, 0, W, H);
+      lightningRef.current = Math.max(0, lightningRef.current - 0.15);
     }
 
-    if (storm > 0) {
-      const maxInterval = 5000;
-      const minInterval = 500;
-      const interval =
-        maxInterval - (storm / 100) * (maxInterval - minInterval);
+    // Sun
+    if (sun > 5) {
+      const opacity = sun / 100;
+      const cx = 100, cy = 20;
+      const pulse = Math.sin(frame * 0.05) * 1;
+      const radius = 8 + pulse;
 
-      stormIntervalRef.current = setInterval(() => {
-        if (Math.random() < storm / 100) {
-          triggerLightning();
+      ctx.fillStyle = `rgba(240,192,48,${opacity * 0.3})`;
+      for (let dy = -radius - 4; dy <= radius + 4; dy++) {
+        for (let dx = -radius - 4; dx <= radius + 4; dx++) {
+          if (dx * dx + dy * dy < (radius + 4) * (radius + 4)) {
+            ctx.fillRect(cx + dx, cy + dy, 1, 1);
+          }
         }
-      }, interval);
+      }
+      ctx.fillStyle = `rgba(240,192,48,${opacity})`;
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          if (dx * dx + dy * dy < radius * radius) {
+            ctx.fillRect(cx + dx, cy + dy, 1, 1);
+          }
+        }
+      }
+      ctx.fillStyle = `rgba(255,240,160,${opacity})`;
+      for (let dy = -3; dy <= 3; dy++) {
+        for (let dx = -3; dx <= 3; dx++) {
+          if (dx * dx + dy * dy < 9) {
+            ctx.fillRect(cx + dx, cy + dy, 1, 1);
+          }
+        }
+      }
+      if (sun > 30) {
+        const rayLen = 4 + Math.sin(frame * 0.08) * 2;
+        ctx.fillStyle = `rgba(240,192,48,${opacity * 0.6})`;
+        for (let i = 0; i < rayLen; i++) {
+          ctx.fillRect(cx + radius + 2 + i, cy, 1, 1);
+          ctx.fillRect(cx - radius - 2 - i, cy, 1, 1);
+          ctx.fillRect(cx, cy + radius + 2 + i, 1, 1);
+          ctx.fillRect(cx, cy - radius - 2 - i, 1, 1);
+          ctx.fillRect(cx + radius + i, cy - radius - i, 1, 1);
+          ctx.fillRect(cx - radius - i, cy - radius - i, 1, 1);
+          ctx.fillRect(cx + radius + i, cy + radius + i, 1, 1);
+          ctx.fillRect(cx - radius - i, cy + radius + i, 1, 1);
+        }
+      }
     }
 
-    return () => {
-      if (stormIntervalRef.current) {
-        clearInterval(stormIntervalRef.current);
+    // Clouds
+    const cloudAlpha = Math.max(rainT, stormT) * 0.9 + 0.1;
+    if (rain > 5 || storm > 5 || sun < 80) {
+      const cloudColor = stormT > 0.3
+        ? `rgba(96,104,120,${cloudAlpha})`
+        : rainT > 0.3
+          ? `rgba(160,164,168,${cloudAlpha})`
+          : `rgba(192,192,192,${cloudAlpha * 0.5})`;
+      drawPixelCloud(ctx, 8, 18, cloudColor);
+      drawPixelCloud(ctx, 42, 12, cloudColor);
+      drawPixelCloud(ctx, 78, 22, cloudColor);
+      if (stormT > 0.3) {
+        drawPixelCloud(ctx, 24, 28, cloudColor);
+        drawPixelCloud(ctx, 58, 16, cloudColor);
       }
-    };
-  }, [storm, triggerLightning]);
+    }
+
+    // Ground
+    for (let y = H - 24; y < H; y++) {
+      const gy = (y - (H - 24)) / 24;
+      const r = Math.round(56 - gy * 24);
+      const g = Math.round(168 - gy * 80);
+      const b = Math.round(50 - gy * 26);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(0, y, W, 1);
+    }
+
+    // Grass
+    for (let x = 0; x < W; x += 3) {
+      const h = 3 + Math.sin(x * 1.7) * 2;
+      const sway = Math.sin(frame * 0.03 + x * 0.5) * 1;
+      ctx.fillStyle = "#50d848";
+      for (let i = 0; i < h; i++) {
+        ctx.fillRect(x + Math.round(sway * (i / h)), H - 24 - i, 1, 1);
+      }
+    }
+
+    // Rain
+    const targetDrops = Math.floor(Math.max(rain, storm * 0.5) * 0.8);
+    const drops = raindropsRef.current;
+    while (drops.length < targetDrops) {
+      drops.push({
+        x: Math.random() * W,
+        y: Math.random() * (H - 24),
+        speed: 2 + Math.random() * 2,
+        length: 2 + Math.random() * 3,
+      });
+    }
+    while (drops.length > targetDrops) drops.pop();
+
+    const dropAlpha = Math.max(rain, storm * 0.5) / 100;
+    ctx.fillStyle = `rgba(160,200,240,${dropAlpha})`;
+    for (const drop of drops) {
+      for (let i = 0; i < drop.length; i++) {
+        ctx.fillRect(Math.floor(drop.x), Math.floor(drop.y) + i, 1, 1);
+      }
+      drop.y += drop.speed;
+      if (drop.y > H - 24) {
+        drop.y = -drop.length;
+        drop.x = Math.random() * W;
+      }
+    }
+
+    // Lightning bolt
+    if (storm > 10) {
+      lightningTimerRef.current--;
+      if (lightningTimerRef.current <= 0 && Math.random() < storm / 3000) {
+        lightningRef.current = 1;
+        lightningTimerRef.current = 30 + Math.random() * 60;
+        const bx = 20 + Math.random() * 80;
+        ctx.fillStyle = "#ffffb0";
+        let by = 10;
+        for (let seg = 0; seg < 8; seg++) {
+          const nx = bx + (Math.random() - 0.5) * 6;
+          const ny = by + 5 + Math.random() * 4;
+          const steps = Math.abs(ny - by);
+          for (let s = 0; s < steps; s++) {
+            const t = s / steps;
+            const px = Math.round(bx + (nx - bx) * t);
+            const py = Math.round(by + (ny - by) * t);
+            ctx.fillRect(px, py, 2, 1);
+          }
+          by = ny;
+        }
+      }
+    }
+
+    // Scanlines
+    ctx.fillStyle = "rgba(0,0,0,0.06)";
+    for (let y = 0; y < H; y += 2) {
+      ctx.fillRect(0, y, W, 1);
+    }
+
+    requestAnimationFrame(draw);
+  }, [sun, rain, storm]);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(id);
+  }, [draw]);
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.4)]"
+      className="flex w-full max-w-[512px] flex-col"
       style={{
-        aspectRatio: "350 / 300",
-        maxWidth: 500,
-        background: skyGradient,
-        transition: "background 0.5s ease",
+        border: "3px solid",
+        borderColor: "#ffffff #404040 #404040 #ffffff",
       }}
     >
-      {/* Sun */}
+      {/* Title bar */}
       <div
-        className="absolute top-[8%] right-[11%]"
+        className="flex items-center justify-between px-1 py-px"
         style={{
-          width: "22%",
-          aspectRatio: "1",
-          background: "radial-gradient(circle, #FFD700 0%, #FFA500 100%)",
-          borderRadius: "50%",
-          boxShadow: "0 0 60px #FFD700, 0 0 100px #FFA500",
-          opacity: sun / 100,
-          transition: "opacity 0.3s ease",
-          animation: sun > 0 ? "pulse-sun 3s ease-in-out infinite" : "none",
+          background: "linear-gradient(90deg, #000080, #1084d0)",
+          height: 20,
         }}
-      />
-
-      {/* Clouds */}
-      <div className="pointer-events-none absolute inset-0">
-        {[
-          {
-            w: "23%",
-            h: "10%",
-            top: "13%",
-            left: "6%",
-            beforeW: "40px",
-            beforeH: "40px",
-            beforeTop: "-20px",
-            beforeLeft: "10px",
-            afterW: "50px",
-            afterH: "50px",
-            afterTop: "-25px",
-            afterLeft: "35px",
-          },
-          {
-            w: "29%",
-            h: "12%",
-            top: "23%",
-            left: "34%",
-            beforeW: "50px",
-            beforeH: "50px",
-            beforeTop: "-25px",
-            beforeLeft: "15px",
-            afterW: "60px",
-            afterH: "60px",
-            afterTop: "-30px",
-            afterLeft: "45px",
-          },
-          {
-            w: "20%",
-            h: "8%",
-            top: "10%",
-            right: "9%",
-            left: undefined,
-            beforeW: "35px",
-            beforeH: "35px",
-            beforeTop: "-18px",
-            beforeLeft: "8px",
-            afterW: "45px",
-            afterH: "45px",
-            afterTop: "-22px",
-            afterLeft: "30px",
-          },
-        ].map((c, i) => (
-          <div
-            key={i}
-            className="cloud-shape absolute rounded-[50px]"
+      >
+        <span className="text-[10px] text-white leading-none select-none tracking-wider">
+          weather_scene.exe
+        </span>
+        <div className="flex gap-px">
+          <button
+            aria-label="Minimize"
+            className="flex h-[14px] w-[14px] items-center justify-center text-[8px] leading-none select-none"
             style={{
-              width: c.w,
-              height: c.h,
-              top: c.top,
-              left: c.left,
-              right: c.right,
-              background: cloudColor,
-              opacity: cloudOpacity,
-              transition: "opacity 0.3s ease, background 0.3s ease",
-              // pseudo elements handled via CSS below
+              background: "#c0c0c0",
+              border: "2px solid",
+              borderColor: "#ffffff #404040 #404040 #ffffff",
+              color: "#000",
             }}
-          />
-        ))}
-      </div>
-
-      <style jsx>{`
-        .cloud-shape::before,
-        .cloud-shape::after {
-          content: "";
-          position: absolute;
-          border-radius: 50%;
-          background: inherit;
-        }
-        .cloud-shape:nth-child(1)::before {
-          width: 40px;
-          height: 40px;
-          top: -20px;
-          left: 10px;
-        }
-        .cloud-shape:nth-child(1)::after {
-          width: 50px;
-          height: 50px;
-          top: -25px;
-          left: 35px;
-        }
-        .cloud-shape:nth-child(2)::before {
-          width: 50px;
-          height: 50px;
-          top: -25px;
-          left: 15px;
-        }
-        .cloud-shape:nth-child(2)::after {
-          width: 60px;
-          height: 60px;
-          top: -30px;
-          left: 45px;
-        }
-        .cloud-shape:nth-child(3)::before {
-          width: 35px;
-          height: 35px;
-          top: -18px;
-          left: 8px;
-        }
-        .cloud-shape:nth-child(3)::after {
-          width: 45px;
-          height: 45px;
-          top: -22px;
-          left: 30px;
-        }
-      `}</style>
-
-      {/* Rain */}
-      <div
-        ref={rainContainerRef}
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      />
-
-      {/* Lightning overlay */}
-      <div
-        ref={lightningRef}
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: "rgba(255, 255, 255, 0)",
-          transition: "background 0.1s",
-        }}
-      />
-
-      {/* Lightning bolt */}
-      <div
-        ref={boltRef}
-        className="absolute"
-        style={{
-          top: "20%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 30,
-          height: 80,
-          opacity: 0,
-          filter: "drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #87CEEB)",
-        }}
-      >
-        <svg viewBox="0 0 24 24" fill="#FFD700" className="h-full w-full">
-          <path d="M13 0L0 13h9v11l13-13h-9z" />
-        </svg>
-      </div>
-
-      {/* Ground */}
-      <div
-        className="absolute inset-x-0 bottom-0 rounded-b-2xl"
-        style={{
-          height: "20%",
-          background: "linear-gradient(180deg, #228B22 0%, #006400 100%)",
-        }}
-      >
-        <div className="absolute -top-3 flex w-full justify-around px-1">
-          {grassBlades.map((blade) => (
-            <GrassBlade key={blade.id} height={blade.height} />
-          ))}
+          >
+            _
+          </button>
+          <button
+            aria-label="Maximize"
+            className="flex h-[14px] w-[14px] items-center justify-center text-[8px] leading-none select-none"
+            style={{
+              background: "#c0c0c0",
+              border: "2px solid",
+              borderColor: "#ffffff #404040 #404040 #ffffff",
+              color: "#000",
+            }}
+          >
+            {"[]"}
+          </button>
+          <button
+            aria-label="Close"
+            className="flex h-[14px] w-[14px] items-center justify-center text-[8px] leading-none select-none"
+            style={{
+              background: "#c0c0c0",
+              border: "2px solid",
+              borderColor: "#ffffff #404040 #404040 #ffffff",
+              color: "#000",
+            }}
+          >
+            x
+          </button>
         </div>
+      </div>
+      {/* Canvas */}
+      <div style={{ background: "#c0c0c0", padding: 2 }}>
+        <canvas
+          ref={canvasRef}
+          width={W}
+          height={H}
+          className="block w-full"
+          style={{
+            aspectRatio: `${W}/${H}`,
+            imageRendering: "pixelated",
+            background: "#000",
+          }}
+        />
       </div>
     </div>
   );
