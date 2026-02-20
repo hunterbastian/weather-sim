@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import WeatherScene from "@/components/weather-scene";
 import WeatherControls from "@/components/weather-controls";
 
@@ -8,10 +8,6 @@ export default function WeatherSimulator() {
   const [sun, setSun] = useState(50);
   const [rain, setRain] = useState(0);
   const [storm, setStorm] = useState(0);
-
-  useEffect(() => {
-    console.log("[v0] WeatherSimulator mounted");
-  }, []);
 
   return (
     <main
