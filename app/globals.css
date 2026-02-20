@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #1a1a2e;
+  --foreground: #f0f0f5;
+  --card: rgba(255, 255, 255, 0.08);
+  --card-foreground: #f0f0f5;
+  --muted: rgba(255, 255, 255, 0.06);
+  --muted-foreground: rgba(255, 255, 255, 0.55);
+  --accent: #4a90d9;
+  --accent-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.12);
+  --ring: #4a90d9;
+  --radius: 0.75rem;
+  --sun-color: #ffd700;
+  --rain-color: #4a90d9;
+  --storm-color: #8b5cf6;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Weather simulation keyframes */
+@keyframes pulse-sun {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 60px #ffd700, 0 0 100px #ffa500;
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 80px #ffd700, 0 0 120px #ffa500;
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(320px);
+  }
+}
+
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
