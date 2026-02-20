@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from "next";
 import { Silkscreen } from "next/font/google";
 import "./globals.css";
 
-const silkscreen = Silkscreen({
-  weight: ["400", "700"],
+const pixelFont = Silkscreen({
+  weight: "400",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Weather Sim v1.0 - 32-Bit Edition",
-  description:
-    "A retro 32-bit pixel art weather simulation",
+  description: "A retro 32-bit pixel art weather simulation",
 };
 
 export const viewport: Viewport = {
@@ -24,9 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${silkscreen.className} font-sans`}>
-        {children}
-      </body>
+      <body className={pixelFont.className}>{children}</body>
     </html>
   );
 }

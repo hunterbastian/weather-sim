@@ -3,7 +3,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: 'Silkscreen', monospace;
   --color-retro-bg: #2a2a4a;
   --color-retro-sky-blue: #5b8cd8;
   --color-retro-sun: #f0c030;
