@@ -1,20 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Silkscreen } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const silkscreen = Silkscreen({
+  weight: ["400", "700"],
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "Weather Simulation",
+  title: "Weather Sim v1.0 - 32-Bit Edition",
   description:
-    "An interactive weather simulation with dynamic sun, rain, and storm effects",
+    "A retro 32-bit pixel art weather simulation",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a1a2e",
+  themeColor: "#2a2a4a",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${silkscreen.className} font-sans`}>
         {children}
       </body>
     </html>

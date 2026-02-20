@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 interface WeatherControlsProps {
   sun: number;
   rain: number;
@@ -18,6 +20,9 @@ interface RetroSliderProps {
 }
 
 function RetroSlider({ label, value, onChange, icon, trackFill }: RetroSliderProps) {
+  const id = useId();
+  const className = `retro-range-${id.replace(/:/g, "")}`;
+
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
@@ -69,47 +74,10 @@ function RetroSlider({ label, value, onChange, icon, trackFill }: RetroSliderPro
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
           aria-label={`${label} intensity`}
-          className="retro-range relative z-10 w-full cursor-pointer"
+          className={`${className} relative z-10 w-full cursor-pointer`}
           style={{ height: 20 }}
         />
       </div>
-      <style jsx>{`
-        .retro-range {
-          -webkit-appearance: none;
-          appearance: none;
-          background: transparent;
-        }
-        .retro-range::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 12px;
-          height: 18px;
-          background: #c0c0c0;
-          border: 2px solid;
-          border-color: #ffffff #404040 #404040 #ffffff;
-          cursor: pointer;
-        }
-        .retro-range::-webkit-slider-thumb:active {
-          border-color: #404040 #ffffff #ffffff #404040;
-        }
-        .retro-range::-moz-range-thumb {
-          width: 12px;
-          height: 18px;
-          background: #c0c0c0;
-          border: 2px solid;
-          border-color: #ffffff #404040 #404040 #ffffff;
-          cursor: pointer;
-          border-radius: 0;
-        }
-        .retro-range::-moz-range-thumb:active {
-          border-color: #404040 #ffffff #ffffff #404040;
-        }
-        .retro-range::-moz-range-track {
-          background: transparent;
-          border: none;
-          height: 6px;
-        }
-      `}</style>
     </div>
   );
 }
