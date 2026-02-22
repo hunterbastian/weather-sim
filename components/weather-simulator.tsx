@@ -5,6 +5,7 @@ import WeatherScene from "@/components/weather-scene";
 import WeatherControls from "@/components/weather-controls";
 import StationHeader from "@/components/station-header";
 import TelemetryReadout from "@/components/telemetry-readout";
+import SignalBars from "@/components/signal-bars";
 
 export default function WeatherSimulator() {
   const [sun, setSun] = useState(50);
@@ -79,6 +80,8 @@ export default function WeatherSimulator() {
         </div>
 
         <TelemetryReadout sun={sun} rain={rain} storm={storm} />
+
+        <SignalBars sun={sun} rain={rain} storm={storm} />
 
         <WeatherControls
           sun={sun}
