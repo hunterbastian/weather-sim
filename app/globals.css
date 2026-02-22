@@ -2,21 +2,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme inline {
+  --font-sans: "Inter", "Inter Fallback";
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback";
+}
+
 :root {
-  --background: #1a1a2e;
-  --foreground: #f0f0f5;
-  --card: rgba(255, 255, 255, 0.08);
-  --card-foreground: #f0f0f5;
-  --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: rgba(255, 255, 255, 0.55);
-  --accent: #4a90d9;
-  --accent-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.12);
-  --ring: #4a90d9;
-  --radius: 0.75rem;
-  --sun-color: #ffd700;
-  --rain-color: #4a90d9;
-  --storm-color: #8b5cf6;
+  --background: #0a0a0f;
+  --foreground: #c8c8d0;
+  --card: rgba(255, 255, 255, 0.03);
+  --card-foreground: #c8c8d0;
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: rgba(255, 255, 255, 0.35);
+  --accent: #3a7d6e;
+  --accent-foreground: #c8c8d0;
+  --border: rgba(255, 255, 255, 0.06);
+  --ring: #3a7d6e;
+  --radius: 0.25rem;
+  --sun-color: #d4a843;
+  --rain-color: #5a8a9e;
+  --storm-color: #9e7a5a;
+  --signal: #3a7d6e;
 }
 
 * {
@@ -26,18 +32,24 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-mono), monospace;
+}
+
+/* Scanline overlay for CRT feel */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }
 
 /* Weather simulation keyframes */
 @keyframes pulse-sun {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 60px #ffd700, 0 0 100px #ffa500;
+    box-shadow: 0 0 40px rgba(212, 168, 67, 0.3), 0 0 80px rgba(212, 168, 67, 0.15);
   }
   50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 80px #ffd700, 0 0 120px #ffa500;
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(212, 168, 67, 0.4), 0 0 100px rgba(212, 168, 67, 0.2);
   }
 }
 
@@ -57,4 +69,27 @@ body {
   50% {
     transform: rotate(5deg);
   }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+@keyframes noise-grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-1px, 1px); }
+  20% { transform: translate(1px, -1px); }
+  30% { transform: translate(-1px, -1px); }
+  40% { transform: translate(1px, 1px); }
+  50% { transform: translate(-1px, 0); }
+  60% { transform: translate(1px, 0); }
+  70% { transform: translate(0, 1px); }
+  80% { transform: translate(0, -1px); }
+  90% { transform: translate(1px, 1px); }
 }
