@@ -8,22 +8,25 @@
 }
 
 :root {
-  --background: #0a0a0f;
-  --foreground: #c8c8d0;
-  --card: rgba(255, 255, 255, 0.03);
-  --card-foreground: #c8c8d0;
-  --muted: rgba(255, 255, 255, 0.04);
-  --muted-foreground: rgba(255, 255, 255, 0.35);
-  --accent: #3a7d6e;
-  --accent-foreground: #c8c8d0;
-  --border: rgba(255, 255, 255, 0.06);
-  --ring: #3a7d6e;
-  --radius: 0.25rem;
-  --sun-color: #d4a843;
-  --rain-color: #5a8a9e;
-  --storm-color: #9e7a5a;
-  --eclipse-color: #6e3a6e;
-  --signal: #3a7d6e;
+  --background: #0a0f0a;
+  --foreground: #33ff66;
+  --card: rgba(51, 255, 102, 0.02);
+  --card-foreground: #33ff66;
+  --muted: rgba(51, 255, 102, 0.04);
+  --muted-foreground: rgba(51, 255, 102, 0.35);
+  --accent: #33ff66;
+  --accent-foreground: #0a0f0a;
+  --border: rgba(51, 255, 102, 0.08);
+  --ring: #33ff66;
+  --radius: 0;
+  --sun-color: #ffcc33;
+  --rain-color: #33aaff;
+  --storm-color: #ff6633;
+  --eclipse-color: #cc33ff;
+  --signal: #33ff66;
+  --terminal-glow: rgba(51, 255, 102, 0.15);
+  --terminal-bright: #66ff99;
+  --terminal-dim: rgba(51, 255, 102, 0.2);
 }
 
 * {
@@ -36,43 +39,39 @@ body {
   font-family: var(--font-mono), monospace;
 }
 
-/* Scanline overlay for CRT feel */
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+/* CRT phosphor scanlines */
+@keyframes scanline-sweep {
+  0% { top: -6px; }
+  100% { top: 100%; }
 }
 
-/* Weather simulation keyframes */
 @keyframes pulse-sun {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 40px rgba(212, 168, 67, 0.3), 0 0 80px rgba(212, 168, 67, 0.15);
+    box-shadow: 0 0 30px rgba(255, 204, 51, 0.4), 0 0 60px rgba(255, 204, 51, 0.2);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 50px rgba(212, 168, 67, 0.4), 0 0 100px rgba(212, 168, 67, 0.2);
+    transform: scale(1.06);
+    box-shadow: 0 0 40px rgba(255, 204, 51, 0.5), 0 0 80px rgba(255, 204, 51, 0.25);
   }
 }
 
 @keyframes fall {
-  0% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(320px);
-  }
+  0% { transform: translateY(-20px); }
+  100% { transform: translateY(320px); }
 }
 
 @keyframes sway {
-  0%, 100% {
-    transform: rotate(-5deg);
-  }
-  50% {
-    transform: rotate(5deg);
-  }
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
 }
 
 @keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes blink-slow {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
@@ -80,6 +79,23 @@ body {
 @keyframes drift {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(4px); }
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.98; }
+  15% { opacity: 0.92; }
+  20% { opacity: 0.97; }
+  50% { opacity: 0.96; }
+  80% { opacity: 0.98; }
+  90% { opacity: 0.94; }
+  100% { opacity: 0.97; }
 }
 
 @keyframes noise-grain {
@@ -93,4 +109,15 @@ body {
   70% { transform: translate(0, 1px); }
   80% { transform: translate(0, -1px); }
   90% { transform: translate(1px, 1px); }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-dim);
 }
