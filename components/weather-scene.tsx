@@ -6,9 +6,20 @@ interface WeatherSceneProps {
   sun: number;
   rain: number;
   storm: number;
+  eclipse: number;
 }
 
-function getSkyGradient(sun: number, rain: number, storm: number) {
+function getSkyGradient(sun: number, rain: number, storm: number, eclipse: number) {
+  if (eclipse > 70) {
+    return "linear-gradient(180deg, #060608 0%, #0a0a10 40%, #08080c 100%)";
+  }
+  if (eclipse > 30) {
+    const t = (eclipse - 30) / 70;
+    const r = Math.round(14 - t * 6);
+    const g = Math.round(14 - t * 6);
+    const b = Math.round(20 - t * 8);
+    return `linear-gradient(180deg, rgb(${r},${r},${b}) 0%, rgb(${r + 6},${r + 6},${b + 8}) 40%, rgb(${r + 3},${r + 3},${b + 4}) 100%)`;
+  }
   if (storm > 50) {
     return "linear-gradient(180deg, #0d0d12 0%, #1a1a22 40%, #151518 100%)";
   }
@@ -49,7 +60,7 @@ function GrassBlade({ height }: { height: number }) {
   );
 }
 
-export default function WeatherScene({ sun, rain, storm }: WeatherSceneProps) {
+export default function WeatherScene({ sun, rain, storm, eclipse }: WeatherSceneProps) {
   const rainContainerRef = useRef<HTMLDivElement>(null);
   const lightningRef = useRef<HTMLDivElement>(null);
   const boltRef = useRef<HTMLDivElement>(null);
@@ -65,7 +76,7 @@ export default function WeatherScene({ sun, rain, storm }: WeatherSceneProps) {
     []
   );
 
-  const skyGradient = getSkyGradient(sun, rain, storm);
+  const skyGradient = getSkyGradient(sun, rain, storm, eclipse);
   const cloudOpacity = getCloudOpacity(rain, storm);
   const cloudColor = getCloudColor(rain, storm);
 
@@ -209,6 +220,64 @@ export default function WeatherScene({ sun, rain, storm }: WeatherSceneProps) {
             animation: sun > 0 ? "pulse-sun 4s ease-in-out infinite" : "none",
           }}
         />
+
+        {/* Eclipse disc - transits across the sun */}
+        {eclipse > 0 && (
+          <div
+            className="absolute"
+            style={{
+              top: "8%",
+              right: "10%",
+              width: "17%",
+              aspectRatio: "1",
+              transform: `translate(${(1 - eclipse / 100) * 60}%, ${(1 - eclipse / 100) * -20}%)`,
+              transition: "transform 0.8s ease, opacity 0.5s ease",
+              zIndex: 2,
+            }}
+          >
+            {/* Corona glow - visible when disc overlaps sun */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                boxShadow:
+                  eclipse > 40
+                    ? `0 0 ${20 + eclipse * 0.4}px rgba(110, 58, 110, ${0.2 + (eclipse / 100) * 0.3}), 0 0 ${40 + eclipse * 0.6}px rgba(212, 168, 67, ${0.05 + (eclipse / 100) * 0.15}), 0 0 ${60 + eclipse * 0.8}px rgba(110, 58, 110, ${0.05 + (eclipse / 100) * 0.1})`
+                    : "none",
+                transition: "box-shadow 0.8s ease",
+              }}
+            />
+            {/* The dark disc */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `radial-gradient(circle, #050508 0%, #080810 70%, rgba(8, 8, 16, 0.9) 100%)`,
+                opacity: eclipse / 100,
+              }}
+            />
+            {/* Inner corona ring */}
+            {eclipse > 50 && (
+              <div
+                className="absolute inset-[-2px] rounded-full"
+                style={{
+                  border: `1px solid rgba(212, 168, 67, ${(eclipse - 50) / 200})`,
+                  boxShadow: `inset 0 0 10px rgba(110, 58, 110, ${(eclipse - 50) / 300})`,
+                  transition: "border-color 0.8s ease, box-shadow 0.8s ease",
+                }}
+              />
+            )}
+          </div>
+        )}
+
+        {/* Ambient eclipse darkening overlay */}
+        {eclipse > 20 && (
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `rgba(0, 0, 0, ${((eclipse - 20) / 80) * 0.4})`,
+              transition: "background 0.8s ease",
+            }}
+          />
+        )}
 
         {/* Horizon haze line */}
         <div

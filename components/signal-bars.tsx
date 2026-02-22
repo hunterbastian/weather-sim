@@ -6,6 +6,7 @@ interface SignalBarsProps {
   sun: number;
   rain: number;
   storm: number;
+  eclipse: number;
 }
 
 interface BarRowProps {
@@ -61,7 +62,7 @@ function BarRow({ index, label, value, color, segments = 10 }: BarRowProps) {
   );
 }
 
-export default function SignalBars({ sun, rain, storm }: SignalBarsProps) {
+export default function SignalBars({ sun, rain, storm, eclipse }: SignalBarsProps) {
   const [tick, setTick] = useState(false);
 
   // Subtle blink on the container edge every few seconds
@@ -110,6 +111,12 @@ export default function SignalBars({ sun, rain, storm }: SignalBarsProps) {
           label="ELC"
           value={storm}
           color="#9e7a5a"
+        />
+        <BarRow
+          index={4}
+          label="ECL"
+          value={eclipse}
+          color="#6e3a6e"
         />
       </div>
     </div>

@@ -1,14 +1,16 @@
 "use client";
 
-import { Sun, CloudRain, CloudLightning } from "lucide-react";
+import { Sun, CloudRain, CloudLightning, Eclipse } from "lucide-react";
 
 interface WeatherControlsProps {
   sun: number;
   rain: number;
   storm: number;
+  eclipse: number;
   onSunChange: (value: number) => void;
   onRainChange: (value: number) => void;
   onStormChange: (value: number) => void;
+  onEclipseChange: (value: number) => void;
 }
 
 interface SliderRowProps {
@@ -117,9 +119,11 @@ export default function WeatherControls({
   sun,
   rain,
   storm,
+  eclipse,
   onSunChange,
   onRainChange,
   onStormChange,
+  onEclipseChange,
 }: WeatherControlsProps) {
   return (
     <div
@@ -180,6 +184,20 @@ export default function WeatherControls({
         }
         trackColor="var(--storm-color)"
         thumbColor="var(--storm-color)"
+      />
+      <SliderRow
+        label="Eclipse"
+        code="ECL.04"
+        value={eclipse}
+        onChange={onEclipseChange}
+        icon={
+          <Eclipse
+            className="h-3.5 w-3.5"
+            style={{ color: "var(--eclipse-color)" }}
+          />
+        }
+        trackColor="var(--eclipse-color)"
+        thumbColor="var(--eclipse-color)"
       />
     </div>
   );

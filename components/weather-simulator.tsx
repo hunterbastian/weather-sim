@@ -11,6 +11,7 @@ export default function WeatherSimulator() {
   const [sun, setSun] = useState(50);
   const [rain, setRain] = useState(0);
   const [storm, setStorm] = useState(0);
+  const [eclipse, setEclipse] = useState(0);
   const [time, setTime] = useState("");
   const [uptime, setUptime] = useState(0);
 
@@ -70,7 +71,7 @@ export default function WeatherSimulator() {
         <StationHeader time={time} uptime={formatUptime(uptime)} />
 
         <div className="flex flex-col gap-1">
-          <WeatherScene sun={sun} rain={rain} storm={storm} />
+          <WeatherScene sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
 
           {/* Scanline bar under scene */}
           <div
@@ -79,17 +80,19 @@ export default function WeatherSimulator() {
           />
         </div>
 
-        <TelemetryReadout sun={sun} rain={rain} storm={storm} />
+        <TelemetryReadout sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
 
-        <SignalBars sun={sun} rain={rain} storm={storm} />
+        <SignalBars sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
 
         <WeatherControls
           sun={sun}
           rain={rain}
           storm={storm}
+          eclipse={eclipse}
           onSunChange={setSun}
           onRainChange={setRain}
           onStormChange={setStorm}
+          onEclipseChange={setEclipse}
         />
 
         {/* Footer status line */}
