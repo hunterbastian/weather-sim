@@ -37,16 +37,17 @@ function BarRow({ index, label, value, color, segments = 10 }: BarRowProps) {
           return (
             <div
               key={i}
-              className="transition-all duration-300"
+              className="transition-all duration-500"
               style={{
-                width: 8,
-                height: 10,
+                width: 6,
+                height: 8,
+                borderRadius: "1px",
                 background: isFilled
                   ? color
                   : nearEdge
-                    ? `color-mix(in srgb, ${color} 25%, transparent)`
-                    : `color-mix(in srgb, ${color} 10%, transparent)`,
-                opacity: isFilled ? 1 - i * 0.04 : 0.4,
+                    ? `color-mix(in srgb, ${color} 20%, transparent)`
+                    : `color-mix(in srgb, ${color} 8%, transparent)`,
+                opacity: isFilled ? 1 - i * 0.04 : 0.3,
               }}
             />
           );
@@ -76,16 +77,16 @@ export default function SignalBars({ sun, rain, storm, eclipse }: SignalBarsProp
 
   return (
     <div
-      className="flex flex-col gap-3 border p-4 transition-all duration-150"
+      className="flex flex-col gap-3 border-t p-5 transition-all duration-300"
       style={{
         background: "var(--card)",
         borderColor: tick
-          ? "rgba(58, 125, 110, 0.15)"
+          ? "rgba(139, 69, 19, 0.12)"
           : "var(--border)",
       }}
     >
       <div
-        className="text-[10px] uppercase tracking-[0.2em]"
+        className="text-[10px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
         {"SIGNAL LEVELS"}
@@ -98,25 +99,25 @@ export default function SignalBars({ sun, rain, storm, eclipse }: SignalBarsProp
           index={1}
           label="SOL"
           value={sun}
-          color="#d4a843"
+          color="#c4956a"
         />
         <BarRow
           index={2}
           label="PRC"
           value={rain}
-          color="#5a8a9e"
+          color="#7a9eb2"
         />
         <BarRow
           index={3}
           label="ELC"
           value={storm}
-          color="#9e7a5a"
+          color="#8a7060"
         />
         <BarRow
           index={4}
           label="ECL"
           value={eclipse}
-          color="#6e3a6e"
+          color="#6b5b73"
         />
       </div>
     </div>

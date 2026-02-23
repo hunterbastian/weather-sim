@@ -145,8 +145,8 @@ export default function WeatherControls({
       <div className="h-px w-full" style={{ background: "var(--border)" }} />
 
       <SliderRow
-        label="Solar"
-        code="SUN.01"
+        label="Taiyou"
+        code="Solar"
         value={sun}
         onChange={onSunChange}
         icon={
@@ -159,8 +159,8 @@ export default function WeatherControls({
         thumbColor="var(--sun-color)"
       />
       <SliderRow
-        label="Precipitation"
-        code="RAN.02"
+        label="Ame"
+        code="Rain"
         value={rain}
         onChange={onRainChange}
         icon={
@@ -173,8 +173,8 @@ export default function WeatherControls({
         thumbColor="var(--rain-color)"
       />
       <SliderRow
-        label="Storm"
-        code="STM.03"
+        label="Arashi"
+        code="Storm"
         value={storm}
         onChange={onStormChange}
         icon={
@@ -187,8 +187,8 @@ export default function WeatherControls({
         thumbColor="var(--storm-color)"
       />
       <SliderRow
-        label="Eclipse"
-        code="ECL.04"
+        label="Nisshoku"
+        code="Eclipse"
         value={eclipse}
         onChange={onEclipseChange}
         icon={

@@ -54,16 +54,16 @@ function deriveWindSpeed(storm: number) {
 }
 
 function deriveCondition(sun: number, rain: number, storm: number, eclipse: number): string {
-  if (eclipse > 80) return "TOTAL ECLIPSE";
-  if (eclipse > 50) return "PARTIAL ECLIPSE";
-  if (eclipse > 20) return "LUNAR TRANSIT";
-  if (storm > 60) return "SEVERE STORM";
-  if (storm > 30) return "THUNDERSTORM";
-  if (rain > 60) return "HEAVY RAIN";
-  if (rain > 30) return "LIGHT RAIN";
-  if (sun > 70) return "CLEAR SKY";
-  if (sun > 40) return "PARTLY CLOUDY";
-  return "OVERCAST";
+  if (eclipse > 80) return "Total Eclipse";
+  if (eclipse > 50) return "Partial Eclipse";
+  if (eclipse > 20) return "Lunar Transit";
+  if (storm > 60) return "Arashi";
+  if (storm > 30) return "Kaminari";
+  if (rain > 60) return "Ame";
+  if (rain > 30) return "Kosame";
+  if (sun > 70) return "Hare";
+  if (sun > 40) return "Kumori";
+  return "Donten";
 }
 
 function DataCell({
