@@ -1,20 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const _jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
+
+const _inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "Weather Simulation",
+  title: "OUTPOST // Weather Station",
   description:
-    "An interactive weather simulation with dynamic sun, rain, and storm effects",
+    "Remote ambient weather monitoring outpost. Real-time atmospheric telemetry.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a1a2e",
+  themeColor: "#0a0a0f",
 };
 
 export default function RootLayout({
@@ -24,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body
+        className={`${_jetbrainsMono.variable} ${_inter.variable} font-mono antialiased`}
+      >
         {children}
       </body>
     </html>

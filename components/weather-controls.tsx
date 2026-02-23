@@ -1,18 +1,21 @@
 "use client";
 
-import { Sun, CloudRain, CloudLightning } from "lucide-react";
+import { Sun, CloudRain, CloudLightning, Eclipse } from "lucide-react";
 
 interface WeatherControlsProps {
   sun: number;
   rain: number;
   storm: number;
+  eclipse: number;
   onSunChange: (value: number) => void;
   onRainChange: (value: number) => void;
   onStormChange: (value: number) => void;
+  onEclipseChange: (value: number) => void;
 }
 
 interface SliderRowProps {
   label: string;
+  code: string;
   value: number;
   onChange: (value: number) => void;
   icon: React.ReactNode;
@@ -22,6 +25,7 @@ interface SliderRowProps {
 
 function SliderRow({
   label,
+  code,
   value,
   onChange,
   icon,
@@ -31,78 +35,80 @@ function SliderRow({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2 text-sm font-medium text-[var(--foreground)]">
+        <span
+          className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]"
+          style={{ color: "var(--muted-foreground)" }}
+        >
           {icon}
-          {label}
+          <span style={{ color: "var(--foreground)" }}>{label}</span>
+          <span className="opacity-50">{code}</span>
         </span>
-        <span className="min-w-[40px] text-right text-sm text-[var(--muted-foreground)]">
-          {value}%
+        <span
+          className="min-w-10 text-right text-xs tabular-nums"
+          style={{ color: "var(--foreground)" }}
+        >
+          {value}
+          <span style={{ color: "var(--muted-foreground)" }}>%</span>
         </span>
       </div>
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        aria-label={`${label} intensity`}
-        className="weather-slider w-full cursor-pointer"
-        style={
-          {
-            "--track-color": trackColor,
-            "--thumb-color": thumbColor,
-          } as React.CSSProperties
-        }
-      />
+      <div className="relative">
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          aria-label={`${label} intensity`}
+          className="outpost-slider w-full cursor-pointer"
+          style={
+            {
+              "--track-color": trackColor,
+              "--thumb-color": thumbColor,
+            } as React.CSSProperties
+          }
+        />
+      </div>
       <style jsx>{`
-        .weather-slider {
+        .outpost-slider {
           -webkit-appearance: none;
           appearance: none;
-          height: 8px;
-          border-radius: 4px;
+          height: 2px;
+          border-radius: 0;
           outline: none;
-          background: linear-gradient(
-            90deg,
-            #2c3e50 0%,
-            var(--track-color) 100%
-          );
+          background: var(--border);
           transition: background 0.3s;
         }
-        .weather-slider::-webkit-slider-thumb {
+        .outpost-slider::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
+          width: 12px;
+          height: 12px;
+          border-radius: 0;
           background: var(--thumb-color);
           cursor: pointer;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-          transition: transform 0.2s;
+          box-shadow: 0 0 8px rgba(58, 125, 110, 0.3);
+          transition: box-shadow 0.2s;
         }
-        .weather-slider::-webkit-slider-thumb:hover {
-          transform: scale(1.2);
+        .outpost-slider::-webkit-slider-thumb:hover {
+          box-shadow: 0 0 12px rgba(58, 125, 110, 0.5);
         }
-        .weather-slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
+        .outpost-slider::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          border-radius: 0;
           background: var(--thumb-color);
           cursor: pointer;
           border: none;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-          transition: transform 0.2s;
+          box-shadow: 0 0 8px rgba(58, 125, 110, 0.3);
+          transition: box-shadow 0.2s;
         }
-        .weather-slider::-moz-range-thumb:hover {
-          transform: scale(1.2);
+        .outpost-slider::-moz-range-thumb:hover {
+          box-shadow: 0 0 12px rgba(58, 125, 110, 0.5);
         }
-        .weather-slider::-moz-range-track {
-          height: 8px;
-          border-radius: 4px;
-          background: linear-gradient(
-            90deg,
-            #2c3e50 0%,
-            var(--track-color) 100%
-          );
+        .outpost-slider::-moz-range-track {
+          height: 2px;
+          border-radius: 0;
+          background: var(--border);
         }
       `}</style>
     </div>
@@ -113,41 +119,85 @@ export default function WeatherControls({
   sun,
   rain,
   storm,
+  eclipse,
   onSunChange,
   onRainChange,
   onStormChange,
+  onEclipseChange,
 }: WeatherControlsProps) {
   return (
     <div
-      className="flex w-full max-w-[500px] flex-col gap-5 rounded-2xl p-6"
+      className="flex flex-col gap-5 border p-5"
       style={{
         background: "var(--card)",
-        backdropFilter: "blur(10px)",
+        borderColor: "var(--border)",
       }}
     >
+      {/* Section label */}
+      <div
+        className="text-[10px] uppercase tracking-[0.2em]"
+        style={{ color: "var(--muted-foreground)" }}
+      >
+        {"PARAMETER CONTROL"}
+      </div>
+
+      <div className="h-px w-full" style={{ background: "var(--border)" }} />
+
       <SliderRow
-        label="Sun"
+        label="Solar"
+        code="SUN.01"
         value={sun}
         onChange={onSunChange}
-        icon={<Sun className="h-5 w-5 text-[var(--sun-color)]" />}
-        trackColor="#FFD700"
-        thumbColor="linear-gradient(135deg, #FFD700, #FFA500)"
+        icon={
+          <Sun
+            className="h-3.5 w-3.5"
+            style={{ color: "var(--sun-color)" }}
+          />
+        }
+        trackColor="var(--sun-color)"
+        thumbColor="var(--sun-color)"
       />
       <SliderRow
-        label="Rain"
+        label="Precipitation"
+        code="RAN.02"
         value={rain}
         onChange={onRainChange}
-        icon={<CloudRain className="h-5 w-5 text-[var(--rain-color)]" />}
-        trackColor="#4A90D9"
-        thumbColor="linear-gradient(135deg, #4A90D9, #2E5984)"
+        icon={
+          <CloudRain
+            className="h-3.5 w-3.5"
+            style={{ color: "var(--rain-color)" }}
+          />
+        }
+        trackColor="var(--rain-color)"
+        thumbColor="var(--rain-color)"
       />
       <SliderRow
         label="Storm"
+        code="STM.03"
         value={storm}
         onChange={onStormChange}
-        icon={<CloudLightning className="h-5 w-5 text-[var(--storm-color)]" />}
-        trackColor="#8B5CF6"
-        thumbColor="linear-gradient(135deg, #8B5CF6, #6D28D9)"
+        icon={
+          <CloudLightning
+            className="h-3.5 w-3.5"
+            style={{ color: "var(--storm-color)" }}
+          />
+        }
+        trackColor="var(--storm-color)"
+        thumbColor="var(--storm-color)"
+      />
+      <SliderRow
+        label="Eclipse"
+        code="ECL.04"
+        value={eclipse}
+        onChange={onEclipseChange}
+        icon={
+          <Eclipse
+            className="h-3.5 w-3.5"
+            style={{ color: "var(--eclipse-color)" }}
+          />
+        }
+        trackColor="var(--eclipse-color)"
+        thumbColor="var(--eclipse-color)"
       />
     </div>
   );
