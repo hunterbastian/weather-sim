@@ -7,18 +7,18 @@ interface StationHeaderProps {
 
 export default function StationHeader({ time, uptime }: StationHeaderProps) {
   return (
-    <header className="flex flex-col gap-6">
+    <header className="flex flex-col gap-3">
       {/* Main title area */}
       <div className="flex items-end justify-between">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           <h1
-            className="font-sans text-xl font-light tracking-[0.15em]"
+            className="font-sans text-base font-light tracking-[0.15em]"
             style={{ color: "var(--foreground)" }}
           >
             {"Weather Observatory"}
           </h1>
           <p
-            className="text-[10px] tracking-[0.2em]"
+            className="text-[9px] tracking-[0.2em]"
             style={{ color: "var(--muted-foreground)" }}
           >
             {"ATMOSPHERIC OBSERVATION"}
@@ -26,15 +26,15 @@ export default function StationHeader({ time, uptime }: StationHeaderProps) {
         </div>
 
         {/* Time display */}
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex flex-col items-end gap-0.5">
           <span
-            className="text-lg font-light tabular-nums tracking-wider"
+            className="text-sm font-light tabular-nums tracking-wider"
             style={{ color: "var(--foreground)" }}
           >
             {time}
           </span>
           <span
-            className="text-[10px] tracking-[0.2em]"
+            className="text-[9px] tracking-[0.2em]"
             style={{ color: "var(--muted-foreground)" }}
           >
             {uptime}

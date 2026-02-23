@@ -43,7 +43,7 @@ export default function WeatherSimulator() {
   };
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-6 md:p-12">
+    <main className="relative flex h-screen flex-col items-center justify-start overflow-hidden px-4 pt-4 pb-2 md:px-6 md:pt-6 md:pb-3">
       {/* Subtle washi paper texture overlay */}
       <div
         className="pointer-events-none fixed inset-0 z-50 opacity-[0.03]"
@@ -53,16 +53,19 @@ export default function WeatherSimulator() {
         }}
       />
 
-      <div className="relative z-10 flex w-full max-w-2xl flex-col gap-8">
+      <div className="relative z-10 flex w-full max-w-xl flex-col gap-3">
         <StationHeader time={time} uptime={formatUptime(uptime)} />
 
-        <div className="flex flex-col gap-2">
-          <WeatherScene sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
+        <WeatherScene sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
+
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <TelemetryReadout sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
+          </div>
+          <div className="flex-1">
+            <SignalBars sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
+          </div>
         </div>
-
-        <TelemetryReadout sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
-
-        <SignalBars sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
 
         <WeatherControls
           sun={sun}
@@ -77,10 +80,10 @@ export default function WeatherSimulator() {
 
         {/* Footer */}
         <div
-          className="flex items-center justify-between px-1 pb-4 text-[10px] tracking-[0.25em]"
+          className="flex items-center justify-between px-1 text-[9px] tracking-[0.25em]"
           style={{ color: "var(--muted-foreground)" }}
         >
-          <span className="font-sans text-[10px] font-light tracking-widest">{"Atmospheric Observation"}</span>
+          <span className="font-sans text-[9px] font-light tracking-widest">{"Atmospheric Observation"}</span>
           <span className="flex items-center gap-2">
             <span
               className="inline-block h-1 w-1 rounded-full"

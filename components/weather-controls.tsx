@@ -33,22 +33,22 @@ function SliderRow({
   thumbColor,
 }: SliderRowProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
         <span
-          className="flex items-center gap-3 text-[10px] tracking-[0.2em]"
+          className="flex items-center gap-2 text-[9px] tracking-[0.2em]"
           style={{ color: "var(--muted-foreground)" }}
         >
           {icon}
-          <span className="font-sans text-xs font-light" style={{ color: "var(--foreground)" }}>{label}</span>
+          <span className="font-sans text-[11px] font-light" style={{ color: "var(--foreground)" }}>{label}</span>
           <span className="opacity-40">{code}</span>
         </span>
         <span
-          className="font-sans min-w-10 text-right text-sm font-light tabular-nums"
+          className="font-sans min-w-8 text-right text-xs font-light tabular-nums"
           style={{ color: "var(--foreground)" }}
         >
           {value}
-          <span className="text-[10px]" style={{ color: "var(--muted-foreground)" }}>%</span>
+          <span className="text-[9px]" style={{ color: "var(--muted-foreground)" }}>%</span>
         </span>
       </div>
       <div className="relative">
@@ -128,7 +128,7 @@ export default function WeatherControls({
 }: WeatherControlsProps) {
   return (
     <div
-      className="flex flex-col gap-6 border-t p-5"
+      className="flex flex-col gap-3 border-t p-3"
       style={{
         background: "var(--card)",
         borderColor: "var(--border)",
@@ -136,7 +136,7 @@ export default function WeatherControls({
     >
       {/* Section label */}
       <div
-        className="text-[10px] tracking-[0.25em]"
+        className="text-[9px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
         {"CONTROLS"}
@@ -151,7 +151,7 @@ export default function WeatherControls({
         onChange={onSunChange}
         icon={
           <Sun
-            className="h-3.5 w-3.5"
+            className="h-3 w-3"
             style={{ color: "var(--sun-color)" }}
           />
         }
@@ -165,7 +165,7 @@ export default function WeatherControls({
         onChange={onRainChange}
         icon={
           <CloudRain
-            className="h-3.5 w-3.5"
+            className="h-3 w-3"
             style={{ color: "var(--rain-color)" }}
           />
         }
@@ -179,7 +179,7 @@ export default function WeatherControls({
         onChange={onStormChange}
         icon={
           <CloudLightning
-            className="h-3.5 w-3.5"
+            className="h-3 w-3"
             style={{ color: "var(--storm-color)" }}
           />
         }
@@ -193,7 +193,7 @@ export default function WeatherControls({
         onChange={onEclipseChange}
         icon={
           <Eclipse
-            className="h-3.5 w-3.5"
+            className="h-3 w-3"
             style={{ color: "var(--eclipse-color)" }}
           />
         }

@@ -76,22 +76,22 @@ function DataCell({
   unit: string;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       <span
-        className="text-[9px] tracking-[0.25em]"
+        className="text-[8px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
         {label}
       </span>
-      <div className="flex items-baseline gap-1">
+      <div className="flex items-baseline gap-0.5">
         <span
-          className="font-sans text-base font-light tabular-nums"
+          className="font-sans text-sm font-light tabular-nums"
           style={{ color: "var(--foreground)" }}
         >
           {value}
         </span>
         <span
-          className="text-[10px]"
+          className="text-[9px]"
           style={{ color: "var(--muted-foreground)" }}
         >
           {unit}
@@ -127,7 +127,7 @@ export default function TelemetryReadout({
 
   return (
     <div
-      className="flex flex-col gap-4 border-t p-5 transition-opacity duration-200"
+      className="flex h-full flex-col gap-2.5 border-t p-3 transition-opacity duration-200"
       style={{
         background: "var(--card)",
         borderColor: "var(--border)",
@@ -137,13 +137,13 @@ export default function TelemetryReadout({
       {/* Condition status bar */}
       <div className="flex items-center justify-between">
         <span
-          className="text-[10px] tracking-[0.25em]"
+          className="text-[9px] tracking-[0.25em]"
           style={{ color: "var(--muted-foreground)" }}
         >
           {"READINGS"}
         </span>
         <span
-          className="font-sans text-xs font-light tracking-wider"
+          className="font-sans text-[10px] font-light tracking-wider"
           style={{ color: "var(--accent)" }}
         >
           {condition}
@@ -153,11 +153,11 @@ export default function TelemetryReadout({
       <div className="h-px w-full" style={{ background: "var(--border)" }} />
 
       {/* Data grid */}
-      <div className="grid grid-cols-3 gap-x-8 gap-y-4 md:grid-cols-6">
+      <div className="grid grid-cols-3 gap-x-4 gap-y-2.5">
         <DataCell label="TEMP" value={temp} unit="C" />
-        <DataCell label="HUMIDITY" value={String(humidity)} unit="%" />
-        <DataCell label="PRESSURE" value={pressure} unit="hPa" />
-        <DataCell label="VISIBILITY" value={visibility} unit="km" />
+        <DataCell label="HUM" value={String(humidity)} unit="%" />
+        <DataCell label="hPa" value={pressure} unit="" />
+        <DataCell label="VIS" value={visibility} unit="km" />
         <DataCell label="WIND" value={String(windSpeed)} unit="km/h" />
         <DataCell label="LUX" value={lux} unit="lx" />
       </div>

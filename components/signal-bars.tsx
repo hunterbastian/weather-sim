@@ -77,7 +77,7 @@ export default function SignalBars({ sun, rain, storm, eclipse }: SignalBarsProp
 
   return (
     <div
-      className="flex flex-col gap-3 border-t p-5 transition-all duration-300"
+      className="flex h-full flex-col gap-2.5 border-t p-3 transition-all duration-300"
       style={{
         background: "var(--card)",
         borderColor: tick
@@ -86,7 +86,7 @@ export default function SignalBars({ sun, rain, storm, eclipse }: SignalBarsProp
       }}
     >
       <div
-        className="text-[10px] tracking-[0.25em]"
+        className="text-[9px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
         {"SIGNAL LEVELS"}
@@ -94,7 +94,7 @@ export default function SignalBars({ sun, rain, storm, eclipse }: SignalBarsProp
 
       <div className="h-px w-full" style={{ background: "var(--border)" }} />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <BarRow
           index={1}
           label="SOL"

@@ -145,7 +145,7 @@ export default function WeatherScene({ sun, rain, storm, eclipse }: WeatherScene
   return (
     <div className="relative flex flex-col">
       <div
-        className="flex items-center justify-between px-1 pb-3 text-[9px] tracking-[0.25em]"
+        className="flex items-center justify-between px-1 pb-1.5 text-[9px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
         <span>{"OBSERVATION"}</span>
