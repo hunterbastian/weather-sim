@@ -12,20 +12,16 @@ export default function WeatherSimulator() {
   const [rain, setRain] = useState(0);
   const [storm, setStorm] = useState(0);
   const [eclipse, setEclipse] = useState(0);
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState("--:--:--");
   const [uptime, setUptime] = useState(0);
 
   useEffect(() => {
     const tick = () => {
       const now = new Date();
-      setTime(
-        now.toLocaleTimeString("en-US", {
-          hour12: false,
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        })
-      );
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      setTime(`${h}:${m}:${s}`);
     };
     tick();
     const interval = setInterval(tick, 1000);
@@ -47,37 +43,21 @@ export default function WeatherSimulator() {
   };
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-4 md:p-8">
-      {/* Subtle noise texture overlay */}
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-6 md:p-12">
+      {/* Subtle washi paper texture overlay */}
       <div
-        className="pointer-events-none fixed inset-0 z-50 opacity-[0.015]"
+        className="pointer-events-none fixed inset-0 z-50 opacity-[0.03]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
           backgroundRepeat: "repeat",
-          animation: "noise-grain 0.5s steps(10) infinite",
         }}
       />
 
-      {/* Subtle vignette */}
-      <div
-        className="pointer-events-none fixed inset-0 z-40"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%)",
-        }}
-      />
-
-      <div className="relative z-10 flex w-full max-w-2xl flex-col gap-6">
+      <div className="relative z-10 flex w-full max-w-2xl flex-col gap-8">
         <StationHeader time={time} uptime={formatUptime(uptime)} />
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <WeatherScene sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
-
-          {/* Scanline bar under scene */}
-          <div
-            className="h-px w-full"
-            style={{ background: "var(--border)" }}
-          />
         </div>
 
         <TelemetryReadout sun={sun} rain={rain} storm={storm} eclipse={eclipse} />
@@ -95,21 +75,21 @@ export default function WeatherSimulator() {
           onEclipseChange={setEclipse}
         />
 
-        {/* Footer status line */}
+        {/* Footer */}
         <div
-          className="flex items-center justify-between px-1 text-[10px] uppercase tracking-[0.2em]"
+          className="flex items-center justify-between px-1 pb-4 text-[10px] tracking-[0.25em]"
           style={{ color: "var(--muted-foreground)" }}
         >
-          <span>{"OUTPOST // WEATHER MONITORING STATION"}</span>
+          <span className="font-sans text-[10px] font-light tracking-widest">{"Atmospheric Observation"}</span>
           <span className="flex items-center gap-2">
             <span
-              className="inline-block h-1.5 w-1.5 rounded-full"
+              className="inline-block h-1 w-1 rounded-full"
               style={{
                 background: "var(--signal)",
-                animation: "blink 2s ease-in-out infinite",
+                animation: "blink 3s ease-in-out infinite",
               }}
             />
-            {"RECORDING"}
+            {"ACTIVE"}
           </span>
         </div>
       </div>

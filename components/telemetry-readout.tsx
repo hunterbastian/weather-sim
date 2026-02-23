@@ -76,16 +76,16 @@ function DataCell({
   unit: string;
 }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1.5">
       <span
-        className="text-[9px] uppercase tracking-[0.2em]"
+        className="text-[9px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
         {label}
       </span>
       <div className="flex items-baseline gap-1">
         <span
-          className="text-sm tabular-nums"
+          className="font-sans text-base font-light tabular-nums"
           style={{ color: "var(--foreground)" }}
         >
           {value}
@@ -127,24 +127,24 @@ export default function TelemetryReadout({
 
   return (
     <div
-      className="flex flex-col gap-3 border p-4 transition-opacity duration-75"
+      className="flex flex-col gap-4 border-t p-5 transition-opacity duration-200"
       style={{
         background: "var(--card)",
         borderColor: "var(--border)",
-        opacity: flicker ? 0.7 : 1,
+        opacity: flicker ? 0.85 : 1,
       }}
     >
       {/* Condition status bar */}
       <div className="flex items-center justify-between">
         <span
-          className="text-[10px] uppercase tracking-[0.2em]"
+          className="text-[10px] tracking-[0.25em]"
           style={{ color: "var(--muted-foreground)" }}
         >
-          {"TELEMETRY READOUT"}
+          {"READINGS"}
         </span>
         <span
-          className="text-[10px] uppercase tracking-[0.15em]"
-          style={{ color: "var(--signal)" }}
+          className="font-sans text-xs font-light tracking-wider"
+          style={{ color: "var(--accent)" }}
         >
           {condition}
         </span>
@@ -153,7 +153,7 @@ export default function TelemetryReadout({
       <div className="h-px w-full" style={{ background: "var(--border)" }} />
 
       {/* Data grid */}
-      <div className="grid grid-cols-3 gap-x-6 gap-y-3 md:grid-cols-6">
+      <div className="grid grid-cols-3 gap-x-8 gap-y-4 md:grid-cols-6">
         <DataCell label="TEMP" value={temp} unit="C" />
         <DataCell label="HUMIDITY" value={String(humidity)} unit="%" />
         <DataCell label="PRESSURE" value={pressure} unit="hPa" />

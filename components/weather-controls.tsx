@@ -33,22 +33,22 @@ function SliderRow({
   thumbColor,
 }: SliderRowProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <span
-          className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]"
+          className="flex items-center gap-3 text-[10px] tracking-[0.2em]"
           style={{ color: "var(--muted-foreground)" }}
         >
           {icon}
-          <span style={{ color: "var(--foreground)" }}>{label}</span>
-          <span className="opacity-50">{code}</span>
+          <span className="font-sans text-xs font-light" style={{ color: "var(--foreground)" }}>{label}</span>
+          <span className="opacity-40">{code}</span>
         </span>
         <span
-          className="min-w-10 text-right text-xs tabular-nums"
+          className="font-sans min-w-10 text-right text-sm font-light tabular-nums"
           style={{ color: "var(--foreground)" }}
         >
           {value}
-          <span style={{ color: "var(--muted-foreground)" }}>%</span>
+          <span className="text-[10px]" style={{ color: "var(--muted-foreground)" }}>%</span>
         </span>
       </div>
       <div className="relative">
@@ -59,7 +59,7 @@ function SliderRow({
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
           aria-label={`${label} intensity`}
-          className="outpost-slider w-full cursor-pointer"
+          className="jp-slider w-full cursor-pointer"
           style={
             {
               "--track-color": trackColor,
@@ -69,44 +69,45 @@ function SliderRow({
         />
       </div>
       <style jsx>{`
-        .outpost-slider {
+        .jp-slider {
           -webkit-appearance: none;
           appearance: none;
-          height: 2px;
+          height: 1px;
           border-radius: 0;
           outline: none;
           background: var(--border);
           transition: background 0.3s;
         }
-        .outpost-slider::-webkit-slider-thumb {
+        .jp-slider::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 12px;
-          height: 12px;
-          border-radius: 0;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
           background: var(--thumb-color);
           cursor: pointer;
-          box-shadow: 0 0 8px rgba(58, 125, 110, 0.3);
-          transition: box-shadow 0.2s;
+          box-shadow: 0 0 6px rgba(139, 69, 19, 0.15);
+          transition: box-shadow 0.3s, transform 0.2s;
         }
-        .outpost-slider::-webkit-slider-thumb:hover {
-          box-shadow: 0 0 12px rgba(58, 125, 110, 0.5);
+        .jp-slider::-webkit-slider-thumb:hover {
+          box-shadow: 0 0 10px rgba(139, 69, 19, 0.25);
+          transform: scale(1.15);
         }
-        .outpost-slider::-moz-range-thumb {
-          width: 12px;
-          height: 12px;
-          border-radius: 0;
+        .jp-slider::-moz-range-thumb {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
           background: var(--thumb-color);
           cursor: pointer;
           border: none;
-          box-shadow: 0 0 8px rgba(58, 125, 110, 0.3);
-          transition: box-shadow 0.2s;
+          box-shadow: 0 0 6px rgba(139, 69, 19, 0.15);
+          transition: box-shadow 0.3s;
         }
-        .outpost-slider::-moz-range-thumb:hover {
-          box-shadow: 0 0 12px rgba(58, 125, 110, 0.5);
+        .jp-slider::-moz-range-thumb:hover {
+          box-shadow: 0 0 10px rgba(139, 69, 19, 0.25);
         }
-        .outpost-slider::-moz-range-track {
-          height: 2px;
+        .jp-slider::-moz-range-track {
+          height: 1px;
           border-radius: 0;
           background: var(--border);
         }
@@ -127,7 +128,7 @@ export default function WeatherControls({
 }: WeatherControlsProps) {
   return (
     <div
-      className="flex flex-col gap-5 border p-5"
+      className="flex flex-col gap-6 border-t p-5"
       style={{
         background: "var(--card)",
         borderColor: "var(--border)",
@@ -135,10 +136,10 @@ export default function WeatherControls({
     >
       {/* Section label */}
       <div
-        className="text-[10px] uppercase tracking-[0.2em]"
+        className="text-[10px] tracking-[0.25em]"
         style={{ color: "var(--muted-foreground)" }}
       >
-        {"PARAMETER CONTROL"}
+        {"CONTROLS"}
       </div>
 
       <div className="h-px w-full" style={{ background: "var(--border)" }} />

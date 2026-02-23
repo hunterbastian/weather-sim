@@ -7,30 +7,21 @@ interface StationHeaderProps {
 
 export default function StationHeader({ time, uptime }: StationHeaderProps) {
   return (
-    <header className="flex flex-col gap-4">
-      {/* Top identifier bar */}
-      <div
-        className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em]"
-        style={{ color: "var(--muted-foreground)" }}
-      >
-        <span>{"SYS.WEATHER-SIM"}</span>
-        <span>{"v2.4.1"}</span>
-      </div>
-
+    <header className="flex flex-col gap-6">
       {/* Main title area */}
       <div className="flex items-end justify-between">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <h1
-            className="text-sm font-normal uppercase tracking-[0.3em]"
+            className="font-sans text-xl font-light tracking-[0.15em]"
             style={{ color: "var(--foreground)" }}
           >
-            {"Weather Station"}
+            {"Weather Observatory"}
           </h1>
           <p
-            className="text-[10px] uppercase tracking-[0.15em]"
+            className="text-[10px] tracking-[0.2em]"
             style={{ color: "var(--muted-foreground)" }}
           >
-            {"Atmospheric Monitoring // Remote Outpost"}
+            {"ATMOSPHERIC OBSERVATION"}
           </p>
         </div>
 
@@ -43,15 +34,15 @@ export default function StationHeader({ time, uptime }: StationHeaderProps) {
             {time}
           </span>
           <span
-            className="text-[10px] uppercase tracking-[0.15em]"
+            className="text-[10px] tracking-[0.2em]"
             style={{ color: "var(--muted-foreground)" }}
           >
-            {"UPTIME "}{uptime}
+            {uptime}
           </span>
         </div>
       </div>
 
-      {/* Divider */}
+      {/* Divider - thin ink line */}
       <div className="h-px w-full" style={{ background: "var(--border)" }} />
     </header>
   );

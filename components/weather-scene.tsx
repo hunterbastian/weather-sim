@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 
 interface WeatherSceneProps {
   sun: number;
@@ -50,8 +50,8 @@ function GrassBlade({ height }: { height: number }) {
     <div
       className="rounded-t-full"
       style={{
-        width: 2,
-        height,
+        width: "2px",
+        height: `${height}px`,
         background:
           "linear-gradient(180deg, rgba(40,60,40,0.8) 0%, rgba(25,40,25,0.6) 100%)",
         transformOrigin: "bottom center",
@@ -67,11 +67,12 @@ export default function WeatherScene({ sun, rain, storm, eclipse }: WeatherScene
   const stormIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const raindropsRef = useRef<HTMLDivElement[]>([]);
 
+  // Use deterministic heights based on index to avoid SSR/client mismatch
   const grassBlades = useMemo(
     () =>
       Array.from({ length: 60 }, (_, i) => ({
         id: i,
-        height: 8 + Math.random() * 12,
+        height: 8 + ((((i * 7 + 13) * 2654435761) >>> 0) % 1000) / 1000 * 12,
       })),
     []
   );

@@ -1,25 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Inter } from "next/font/google";
+import { IBM_Plex_Mono, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 
-const _jetbrainsMono = JetBrains_Mono({
+const _ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
   variable: "--font-mono",
 });
 
-const _inter = Inter({
+const _notoSerifJP = Noto_Serif_JP({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
   variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "OUTPOST // Weather Station",
+  title: "Weather Observatory",
   description:
-    "Remote ambient weather monitoring outpost. Real-time atmospheric telemetry.",
+    "Atmospheric observation and weather monitoring station.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0f",
+  themeColor: "#f5f0e8",
 };
 
 export default function RootLayout({
@@ -30,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${_jetbrainsMono.variable} ${_inter.variable} font-mono antialiased`}
+        className={`${_ibmPlexMono.variable} ${_notoSerifJP.variable} font-mono antialiased`}
       >
         {children}
       </body>

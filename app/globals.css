@@ -3,30 +3,30 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Inter", "Inter Fallback";
-  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback";
+  --font-sans: "Noto Serif JP", "Noto Serif JP Fallback", serif;
+  --font-mono: "IBM Plex Mono", "IBM Plex Mono Fallback", monospace;
 }
 
 :root {
-  --background: #0a0f0a;
-  --foreground: #33ff66;
-  --card: rgba(51, 255, 102, 0.02);
-  --card-foreground: #33ff66;
-  --muted: rgba(51, 255, 102, 0.04);
-  --muted-foreground: rgba(51, 255, 102, 0.35);
-  --accent: #33ff66;
-  --accent-foreground: #0a0f0a;
-  --border: rgba(51, 255, 102, 0.08);
-  --ring: #33ff66;
+  --background: #f5f0e8;
+  --foreground: #2c2c2c;
+  --card: rgba(44, 44, 44, 0.02);
+  --card-foreground: #2c2c2c;
+  --muted: rgba(44, 44, 44, 0.04);
+  --muted-foreground: rgba(44, 44, 44, 0.45);
+  --accent: #8b4513;
+  --accent-foreground: #f5f0e8;
+  --border: rgba(44, 44, 44, 0.1);
+  --ring: #8b4513;
   --radius: 0;
-  --sun-color: #ffcc33;
-  --rain-color: #33aaff;
-  --storm-color: #ff6633;
-  --eclipse-color: #cc33ff;
-  --signal: #33ff66;
-  --terminal-glow: rgba(51, 255, 102, 0.15);
-  --terminal-bright: #66ff99;
-  --terminal-dim: rgba(51, 255, 102, 0.2);
+  --sun-color: #c4956a;
+  --rain-color: #7a9eb2;
+  --storm-color: #8a7060;
+  --eclipse-color: #6b5b73;
+  --signal: #8b4513;
+  --ink-wash: rgba(44, 44, 44, 0.06);
+  --ink-strong: rgba(44, 44, 44, 0.7);
+  --ink-faint: rgba(44, 44, 44, 0.15);
 }
 
 * {
@@ -39,20 +39,14 @@ body {
   font-family: var(--font-mono), monospace;
 }
 
-/* CRT phosphor scanlines */
-@keyframes scanline-sweep {
-  0% { top: -6px; }
-  100% { top: 100%; }
-}
-
 @keyframes pulse-sun {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 30px rgba(255, 204, 51, 0.4), 0 0 60px rgba(255, 204, 51, 0.2);
+    box-shadow: 0 0 30px rgba(196, 149, 106, 0.3), 0 0 60px rgba(196, 149, 106, 0.1);
   }
   50% {
-    transform: scale(1.06);
-    box-shadow: 0 0 40px rgba(255, 204, 51, 0.5), 0 0 80px rgba(255, 204, 51, 0.25);
+    transform: scale(1.04);
+    box-shadow: 0 0 40px rgba(196, 149, 106, 0.35), 0 0 80px rgba(196, 149, 106, 0.15);
   }
 }
 
@@ -62,8 +56,8 @@ body {
 }
 
 @keyframes sway {
-  0%, 100% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
 }
 
 @keyframes blink {
@@ -78,46 +72,21 @@ body {
 
 @keyframes drift {
   0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(4px); }
+  50% { transform: translateX(3px); }
 }
 
-@keyframes cursor-blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-@keyframes flicker {
-  0% { opacity: 0.97; }
-  5% { opacity: 0.95; }
-  10% { opacity: 0.98; }
-  15% { opacity: 0.92; }
-  20% { opacity: 0.97; }
-  50% { opacity: 0.96; }
-  80% { opacity: 0.98; }
-  90% { opacity: 0.94; }
-  100% { opacity: 0.97; }
-}
-
-@keyframes noise-grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-1px, 1px); }
-  20% { transform: translate(1px, -1px); }
-  30% { transform: translate(-1px, -1px); }
-  40% { transform: translate(1px, 1px); }
-  50% { transform: translate(-1px, 0); }
-  60% { transform: translate(1px, 0); }
-  70% { transform: translate(0, 1px); }
-  80% { transform: translate(0, -1px); }
-  90% { transform: translate(1px, 1px); }
+@keyframes breathe {
+  0%, 100% { opacity: 0.97; }
+  50% { opacity: 1; }
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 ::-webkit-scrollbar-track {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--terminal-dim);
+  background: var(--ink-faint);
 }
